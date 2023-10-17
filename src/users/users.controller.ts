@@ -23,7 +23,13 @@ import {  ApiTags } from '@nestjs/swagger';
     @Query('page') page: number){
       return this.usersService.getPage(limit, page)
     }
-    
+
+    @Get('all')
+    getAll(){
+      return this.usersService.getAll()
+    }
+
+
     @Post()
     addUser(
       @Body() user: CreateUserDto,

@@ -31,6 +31,15 @@ class UsersService {
     }
   }
 
+  async getAll() {
+    const total = await this.userModel.count()
+    const data = await this.userModel.find({})
+    return {
+      total,
+      data
+    }
+  }
+
   async getById(id: string) {
     const user = await this.userModel.findById(id)
     if (!user) {
