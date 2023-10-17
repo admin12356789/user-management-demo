@@ -6,15 +6,24 @@ import {
     Param,
     Patch,
     Delete,
+    Query,
+    Put,
   } from '@nestjs/common';
 import UsersService from './users.service';
 import CreateUserDto from './dto/createUser.dto';
+import {  ApiTags } from '@nestjs/swagger';
   
-  
+  @ApiTags('users')
   @Controller('users')
   export class UsersController {
     constructor(private readonly usersService: UsersService) {}
   
+    @Get()
+    getPage(@Query('limit') limit: number,
+    @Query('page') page: number){
+      return this.usersService.getPage(limit, page)
+    }
+    
     @Post()
     addUser(
       @Body() user: CreateUserDto,
@@ -35,20 +44,16 @@ import CreateUserDto from './dto/createUser.dto';
       return this.usersService.getById(userId);
     }
   
-    // @Patch(':id')
-    // updateUser(
-    //   @Param('id') userId: string,
-    //   @Body('title') prodTitle: string,
-    //   @Body('description') prodDesc: string,
-    //   @Body('price') prodPrice: number,
-    // ) {
-    //   this.usersService.updateUser(userId, prodTitle, prodDesc, prodPrice);
-    //   return null;
-    // }
+    @Put(':id')
+    updateUser(
+      @Param('id') userId: string,
+      @Body() user: CreateUserDto
+    ) {
+      return this.usersService.update(userId, user);
+    }
   
     @Delete(':id')
     removeUser(@Param('id') userId: string) {
-        this.usersService.delete(userId);
-        return null;
+      return this.usersService.delete(userId);
     }
   }

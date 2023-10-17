@@ -3,25 +3,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserDocument, User } from './user.schema';
 import CreateUserDto from './dto/createUser.dto';
-// import PostsService from '../posts/posts.service';
-import { InjectConnection } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
 
 @Injectable()
 class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
-    // private readonly postsService: PostsService,
-    @InjectConnection() private readonly connection: mongoose.Connection,
   ) {}
 
   async getByEmail(email: string) {
-    const user = await this.userModel.findOne({ email }).populate({
-      path: 'posts',
-      populate: {
-        path: 'categories',
-      },
-    });
+    const user = await this.userModel.findOne({ email })
 
     if (!user) {
       throw new NotFoundException();
@@ -30,54 +20,43 @@ class UsersService {
     return user;
   }
 
-  async getById(id: string) {
-    const user = await this.userModel.findById(id).populate({
-      path: 'posts',
-      populate: {
-        path: 'categories',
-      },
-    });
+  async getPage(limit: number, page: number){
+    const total = await this.userModel.count()
+    const data= await this.userModel.find({}).skip(page * limit ).limit(limit).exec()
+    return {
+      data,
+      total,
+      page,
+      last_page: Math.ceil(total / limit )
+    }
+  }
 
+  async getById(id: string) {
+    const user = await this.userModel.findById(id)
     if (!user) {
       throw new NotFoundException();
     }
-
     return user;
   }
 
   async create(userData: CreateUserDto) {
     const createdUser = new this.userModel(userData);
-    // await createdUser
-    //   .populate({
-    //     path: 'posts',
-    //     populate: {
-    //       path: 'categories',
-    //     },
-    //   })
-    //   .execPopulate();
     return createdUser.save();
   }
 
+  async update(id: string, userData: CreateUserDto) {
+    const user = await this.userModel.findByIdAndUpdate(id, userData).setOptions({
+      overwrite: true,
+      new: true
+    })
+    return user
+  }
+
   async delete(userId: string) {
-    const session = await this.connection.startSession();
-
-    session.startTransaction();
-    try {
-      const user = await this.userModel
-        .findByIdAndDelete(userId)
-        .populate('posts')
-        .session(session);
-
-      if (!user) {
-        throw new NotFoundException();
-      }
-      await session.commitTransaction();
-    } catch (error) {
-      await session.abortTransaction();
-      throw error;
-    } finally {
-      session.endSession();
-    }
+   const result = await  this.userModel.findByIdAndDelete(userId);
+   if(!result){
+    throw new NotFoundException()
+   }
   }
 }
 

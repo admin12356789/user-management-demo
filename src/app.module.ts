@@ -3,7 +3,6 @@ import {MongooseModule } from '@nestjs/mongoose'
 import {ConfigModule , ConfigService} from '@nestjs/config'
 import * as Joi from '@hapi/joi'
 import { UsersModule } from './users/users.module';
-import { CatsModule } from './cats/cats.module';
 
 @Module({
   imports: [
@@ -21,7 +20,7 @@ import { CatsModule } from './cats/cats.module';
         const username = configService.get('MONGO_USERNAME');
         const password = configService.get('MONGO_PASSWORD');
         const database = configService.get('MONGO_DATABASE') || 'users';
-        const host = configService.get('MONGO_HOST') || 'localhost:27017/';
+        const host = configService.get('MONGO_HOST') 
 
         return {
           // uri: `mongodb://${username}:${password}@${host}`,
@@ -31,15 +30,10 @@ import { CatsModule } from './cats/cats.module';
       },
       inject: [ConfigService]
     }),
-    UsersModule,
-    CatsModule
+    UsersModule
   ],
   controllers: [],
   providers: [],
 })
-
-// @Module({
-//   imports: [CatsModule]
-// })
 
 export class AppModule {}

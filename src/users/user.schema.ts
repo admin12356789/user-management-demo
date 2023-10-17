@@ -47,9 +47,6 @@ export class User {
     },
   })
   creditCardNumber?: string;
-
-//   @Type(() => Post)
-//   posts: Post[];
 }
 
 const UserSchema = SchemaFactory.createForClass(User);
