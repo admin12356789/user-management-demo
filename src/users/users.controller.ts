@@ -18,11 +18,11 @@ import {  ApiTags } from '@nestjs/swagger';
   export class UsersController {
     constructor(private readonly usersService: UsersService) {}
   
-    @Get()
-    getPage(@Query('limit') limit: number,
-    @Query('page') page: number){
-      return this.usersService.getPage(limit, page)
-    }
+    // @Get()
+    // getPage(@Query('limit') limit: number,
+    // @Query('page') page: number){
+    //   return this.usersService.getPage(limit, page)
+    // }
 
     @Get('all')
     getAll(){

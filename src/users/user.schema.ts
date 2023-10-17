@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId } from 'mongoose';
 import { Exclude, Transform, Type } from 'class-transformer';
 import { Address, AddressSchema } from './address.schema';
-// import { Post } from '../posts/post.schema';
 
 export type UserDocument = User & Document;
 
