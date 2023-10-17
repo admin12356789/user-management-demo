@@ -8,8 +8,8 @@ import { UsersModule } from './users/users.module';
   imports: [
     ConfigModule.forRoot({
       validationSchema :  Joi.object({
-        // MONGO_USERNAME: Joi.string().required(),
-        // MONGO_PASSWORD: Joi.string().required(),
+        MONGO_USERNAME: Joi.string().required(),
+        MONGO_PASSWORD: Joi.string().required(),
         MONGO_DATABASE: Joi.string().required(),
         MONGO_HOST: Joi.string().required(),
       })
@@ -23,8 +23,7 @@ import { UsersModule } from './users/users.module';
         const host = configService.get('MONGO_HOST') 
 
         return {
-          // uri: `mongodb://${username}:${password}@${host}`,
-          uri: `mongodb://${host}/`,
+          uri: `mongodb+srv://${username}:${password}@${host}`,
           dbName: database,
         };
       },
