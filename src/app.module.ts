@@ -23,8 +23,8 @@ import { AuthModule } from './auth/auth.module';
         const host = configService.get('MONGO_HOST') 
 
         return {
-          uri: `mongodb+srv://${username}:${password}@${host}`,
-          dbName: database,
+          uri: configService.get('DATABASE_URL') || `mongodb+srv://${username}:${password}@${host}`,
+          dbName: configService.get('CA_CERT') || database,
         };
       },
       inject: [ConfigService]
