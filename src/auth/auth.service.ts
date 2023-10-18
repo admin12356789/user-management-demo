@@ -42,13 +42,16 @@ class AuthService {
     }
   }
 
-  async login(dataUser: LoginUserDto) : Promise<{accessToken: string}> {
+  async login(dataUser: LoginUserDto): Promise<{ accessToken: string }> {
     try {
       const user = await this.userModel.findOne({ email: dataUser.email });
       if (!user) {
         throw new UnauthorizedException('Invalid email or password');
       }
-      const isPasswordMatched = await brcypt.compare(dataUser.password, user.password)
+      const isPasswordMatched = await brcypt.compare(
+        dataUser.password,
+        user.password,
+      );
       if (!isPasswordMatched) {
         throw new UnauthorizedException('Invalid email or password');
       }
@@ -56,6 +59,21 @@ class AuthService {
         fullName: user.fullName,
         email: user.email,
         id: user._id,
+      });
+      return {
+        accessToken: jwt,
+      };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async refreshToken(dataUser: User): Promise<{ accessToken: string }> {
+    try {
+      const jwt = await this.jwtService.signAsync({
+        fullName: dataUser.fullName,
+        email: dataUser.email,
+        id: dataUser._id,
       });
       return {
         accessToken: jwt,

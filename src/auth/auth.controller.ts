@@ -1,11 +1,10 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
-import UsersService from 'src/users/users.service';
+import { Controller, Post, Body, Request, Res } from '@nestjs/common';
 import AuthService from './auth.service';
 import { Response } from 'express';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
-import CreateUserDto from 'src/users/dto/createUser.dto';
+import { ApiTags } from '@nestjs/swagger';
 import LoginUserDto from './dto/login.dto';
 import SignUpDto from './dto/signup.dto';
+import { Request } from 'supertest';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -20,9 +19,14 @@ export class AuthController {
   async login(
     @Body() data: LoginUserDto,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<{ accessToken: string}>{
-    const jwt = await this.authService.login(data );
+  ): Promise<{ accessToken: string }> {
+    const jwt = await this.authService.login(data);
     response.cookie('jwt', { httpOnly: true });
     return jwt;
+  }
+
+  @Post('refresh')
+  async refresh(@Request() request : Request): Promise<{ accessToken: string }> {
+    return this.authService.refreshToken(request.);
   }
 }
