@@ -18,7 +18,7 @@ class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
+  async signUp(signUpDto: SignUpDto): Promise<{ accessToken: string }> {
     try {
       const { email, password, firstName, lastName } = signUpDto;
       const hasPassword = await brcypt.hash(password, 10);
@@ -35,14 +35,14 @@ class AuthService {
         id: user._id,
       });
       return {
-        token,
+        accessToken: token,
       };
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
-  async login(dataUser: LoginUserDto) : Promise<{token: string}> {
+  async login(dataUser: LoginUserDto) : Promise<{accessToken: string}> {
     try {
       const user = await this.userModel.findOne({ email: dataUser.email });
       if (!user) {
@@ -58,7 +58,7 @@ class AuthService {
         id: user._id,
       });
       return {
-        token: jwt,
+        accessToken: jwt,
       };
     } catch (error) {
       throw new BadRequestException(error.message);

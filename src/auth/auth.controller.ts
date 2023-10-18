@@ -12,7 +12,7 @@ import SignUpDto from './dto/signup.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post('signup')
-  addUser(@Body() data: SignUpDto): Promise<{ token: string }> {
+  addUser(@Body() data: SignUpDto): Promise<{ accessToken: string }> {
     return this.authService.signUp(data);
   }
 
@@ -20,7 +20,7 @@ export class AuthController {
   async login(
     @Body() data: LoginUserDto,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<{ token: string}>{
+  ): Promise<{ accessToken: string}>{
     const jwt = await this.authService.login(data );
     response.cookie('jwt', { httpOnly: true });
     return jwt;
