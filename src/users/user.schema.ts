@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId } from 'mongoose';
+import mongoose, { Document, ObjectId } from 'mongoose';
 import { Exclude, Transform, Type } from 'class-transformer';
 import { Address, AddressSchema } from './address.schema';
 
@@ -46,6 +46,7 @@ export class User {
     },
   })
   creditCardNumber?: string;
+
 }
 
 const UserSchema = SchemaFactory.createForClass(User);
