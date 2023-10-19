@@ -1,10 +1,9 @@
-import { Controller, Post, Body, Request, Res } from '@nestjs/common';
+import { Controller, Post, Body, Res } from '@nestjs/common';
 import AuthService from './auth.service';
 import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import LoginUserDto from './dto/login.dto';
 import SignUpDto from './dto/signup.dto';
-import { Request } from 'supertest';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -23,10 +22,5 @@ export class AuthController {
     const jwt = await this.authService.login(data);
     response.cookie('jwt', { httpOnly: true });
     return jwt;
-  }
-
-  @Post('refresh')
-  async refresh(@Request() request : Request): Promise<{ accessToken: string }> {
-    return this.authService.refreshToken(request.);
   }
 }
